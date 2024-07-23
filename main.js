@@ -21,7 +21,6 @@ function animate(){
     world.generate();
     world.draw(viewport.ctx);
     editor.display();
-    new Polygon(graph.points).draw(viewport.ctx, {fillStyle: 'rgba(0, 0, 0, 0.1)'});
     requestAnimationFrame(animate);
 }
 

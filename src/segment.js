@@ -12,7 +12,7 @@ export class Segment {
        return this.p1.equals(point) || this.p2.equals(point);
     }
  
-    draw(ctx, {width = 2, color = "black", dash = []} = {}) {
+    draw(ctx, {width = 2, color = "white", dash = []} = {}) {
          ctx.beginPath();
          ctx.strokeStyle = color;
          ctx.lineWidth = width;
