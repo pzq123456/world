@@ -3,6 +3,7 @@ import { Polygon } from "./polygon.js";
 import { Segment } from "./segment.js";
 import { add, scale, lerp, distance } from "./utils.js";
 import { Point } from "./point.js";
+import { Tree } from "./tree.js";
 
 export class World{
     constructor(
@@ -73,7 +74,7 @@ export class World{
 
             if(keep){ // can not overlap with other trees
                 for(const tree of trees){
-                    if(distance(tree,p) < this.treeSize){
+                    if(distance(tree.center, p) < this.treeSize){
                         keep = false;
                         break;
                     }
@@ -93,7 +94,7 @@ export class World{
             }
 
             if(keep){
-                trees.push(p);
+                trees.push(new Tree(p, this.treeSize));
                 tryCount = 0;
             }
             tryCount++;
@@ -178,7 +179,7 @@ export class World{
         }
 
         for(const tree of this.trees){
-            tree.draw(ctx, { size: this.treeSize, color: "green"})
+            tree.draw(ctx)
         }
         for (const building of this.buildings) {
             building.draw(ctx, { fillStyle: "#333", strokeStyle: "#333" });
