@@ -1,27 +1,37 @@
-import { Segment } from "./segment.js";
-import { add, substract, scale, lerp2D, lerp } from "./utils.js";
+import { lerp2D, lerp, translate, getFake3dPoint } from "./utils.js";
+import { Polygon } from "./polygon.js";
 
-export class Tree{
-    constructor(center, size, heightCoef = 0.3){
+export class Tree {
+    constructor(center, size, height = 200) {
         this.center = center;
-        this.size = size; // size of the tree
-        this.heightCoef = heightCoef;
+        this.size = size; // size of the base
+        this.height = height;
+        this.base = this.#generateLevel(center, size);
     }
 
-    draw(ctx, viewPoint){
-        const diff = substract(this.center, viewPoint, this.heightCoef);
-        const top = add(this.center, scale(diff, this.heightCoef));
+    #generateLevel(point, size) {
+        const points = [];
+        const rad = size / 2;
+        for (let a = 0; a < Math.PI * 2; a += Math.PI / 16) {
+            const kindOfRandom = Math.cos(((a + this.center.x) * size) % 17) ** 2;
+            const noisyRadius = rad * lerp(0.5, 1, kindOfRandom);
+            points.push(translate(point, a, noisyRadius));
+        }
+        return new Polygon(points);
+    }
 
-        const levelcount = 7;
-        for (let level = 0; level < levelcount; level++) {
-            const t = level / (levelcount - 1) ;
+    draw(ctx, viewPoint) {
+        const top = getFake3dPoint(this.center, viewPoint, this.height);
+
+        const levelCount = 7;
+        for (let level = 0; level < levelCount; level++) {
+            const t = level / (levelCount - 1);
             const point = lerp2D(this.center, top, t);
             const color = "rgb(30," + lerp(50, 200, t) + ",70)";
-            const size = lerp(this.size, 20, t);
-
-            point. draw(ctx, { size, color });
+            const size = lerp(this.size, 40, t);
+            const poly = this.#generateLevel(point, size);
+            poly.draw(ctx, { fillStyle: color, strokeStyle: "rgba(0,0,0,0)" });
         }
-
-        // new Segment(this.center, top).draw(ctx);
     }
 }
+

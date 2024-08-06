@@ -14,7 +14,7 @@ export class World{
         buildingWidth = 150,
         buildingMinWidth = 150,
         spacing = 50,
-        treeSize = 50
+        treeSize = 100
     ){
         this.graph = graph;
         this.roadWidth = roadWidth;
@@ -179,12 +179,22 @@ export class World{
             seg.draw(ctx, { color: "white", width: 4 });
         }
 
-        for(const tree of this.trees){
-            tree.draw(ctx, viewPoint);
-        }
+        // for(const tree of this.trees){
+        //     tree.draw(ctx, viewPoint);
+        // }
 
-        for (const building of this.buildings) {
-            building.draw(ctx, viewPoint);
+        // for (const building of this.buildings) {
+        //     building.draw(ctx, viewPoint);
+        // }
+
+        const items = [...this.buildings, ...this.trees];
+        items.sort(
+           (a, b) =>
+              b.base.distanceToPoint(viewPoint) -
+              a.base.distanceToPoint(viewPoint)
+        );
+        for (const item of items) {
+           item.draw(ctx, viewPoint);
         }
     }
 }
