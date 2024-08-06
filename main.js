@@ -1,5 +1,5 @@
 import { Graph, Editor, Viewport, Polygon, Envelope, utils, World } from "./src/index.js";
-
+import { scale } from "./src/utils.js";
 const myCanvas = document.getElementById('myCanvas');
 myCanvas.height = 900;
 myCanvas.width = 900;
@@ -23,8 +23,10 @@ function animate(){
         world.generate();
         oldGraphHash = graph.hash();
     }
+    const viewPoint = scale(viewport.getOffset(), -1);
+
     // world.generate();
-    world.draw(viewport.ctx);
+    world.draw(viewport.ctx, viewPoint);
     editor.display();
     requestAnimationFrame(animate);
 }

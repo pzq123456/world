@@ -4,6 +4,7 @@ import { Segment } from "./segment.js";
 import { add, scale, lerp, distance } from "./utils.js";
 import { Point } from "./point.js";
 import { Tree } from "./tree.js";
+import { Building } from "./building.js"
 
 export class World{
     constructor(
@@ -42,7 +43,7 @@ export class World{
     #generateTrees(){
         const points = [
             ...this.roadBorders.map((seg) => [seg.p1, seg.p2]).flat(),
-            ...this.buildings.map((b) => b.points).flat()
+            ...this.buildings.map((b) => b.base.points).flat()
         ]
 
         const left = Math.min(...points.map(p => p.x));
@@ -51,7 +52,7 @@ export class World{
         const bottom = Math.min(...points.map(p => p.y));
 
         const illegalPolys = [
-            ...this.buildings,
+            ...this.buildings.map ((b) => b.base),
             ...this.envelopes.map(env => env.poly)
         ]
 
@@ -164,10 +165,10 @@ export class World{
             }
         }
 
-        return bases;
+        return bases.map((b) => new Building(b));
     }
 
-    draw(ctx){
+    draw(ctx, viewPoint){
         for (const env of this.envelopes) {
             env.draw(ctx, { fillStyle: "#BBB", strokeStyle: "#BBB", lineWidth: 15 });
         }
@@ -179,10 +180,11 @@ export class World{
         }
 
         for(const tree of this.trees){
-            tree.draw(ctx)
+            tree.draw(ctx, viewPoint);
         }
+
         for (const building of this.buildings) {
-            building.draw(ctx, { fillStyle: "#333", strokeStyle: "#333" });
+            building.draw(ctx, viewPoint);
         }
     }
 }

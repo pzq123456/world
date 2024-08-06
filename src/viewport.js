@@ -64,10 +64,17 @@ export class Viewport{
     }
 
     #handleMouseDown(e){
+        // 若设备没有鼠标中键 MacOS command
+        if(e.button === 0 && e.ctrlKey){
+            this.drag.active = true;
+            this.drag.start = this.getMouse(e);
+        }
+
         if(e.button === 1){
             this.drag.active = true;
             this.drag.start = this.getMouse(e);
         }
+
     }
 
     #handleMouseMove(e){

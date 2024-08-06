@@ -41,7 +41,7 @@ export class Editor{
             this.#removePoint(this.hovered);
          }
       }
-      if (evt.button == 0) { // left click
+      if (evt.button == 0 && !evt.ctrlKey) { // left click
          if (this.hovered) {
             this.#select(this.hovered);
             this.dragging = true;
